@@ -1727,6 +1727,7 @@
        Form anchor offset (sticky nav) + Demo modal
        ===================================================== */
     #form { scroll-margin-top: 88px; }
+    #top { position: absolute; top: 0; }
     html { scroll-behavior: smooth; }
 
     .demo-modal {
@@ -1908,6 +1909,7 @@
   </style>
 </head>
 <body>
+  <span id="top" aria-hidden="true"></span>
   <noscript>
     <div class="noscript-warning">
       Bu sayfanın bazı etkileşimli alanları için JavaScript gereklidir. Temel içerikler yine de görüntülenebilir.
@@ -1921,7 +1923,7 @@
   <main id="main" tabindex="-1">
   <header class="nav" id="nav">
     <div class="container nav-inner">
-      <a href="#nav" class="logo" aria-label="saha.team — sayfa başına dön">
+      <a href="#top" class="logo" aria-label="saha.team — sayfa başına dön">
         <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <rect x="2" y="2" width="28" height="28" rx="8" fill="#0a1f1c"/>
           <g stroke="#faf8f3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none">
@@ -1952,7 +1954,7 @@
     <div class="nav-drawer-overlay" data-close></div>
     <div class="nav-drawer-panel">
       <div class="nav-drawer-head">
-        <a href="#nav" class="logo" aria-label="saha.team — sayfa başına dön">
+        <a href="#top" class="logo" aria-label="saha.team — sayfa başına dön">
           <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect x="2" y="2" width="28" height="28" rx="8" fill="#0a1f1c"/>
             <g stroke="#faf8f3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none">
@@ -3087,7 +3089,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="#nav" class="logo" aria-label="saha.team — sayfa başına dön">
+          <a href="#top" class="logo" aria-label="saha.team — sayfa başına dön">
             <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect x="2" y="2" width="28" height="28" rx="8" fill="#0a1f1c"/>
               <g stroke="#faf8f3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none">
