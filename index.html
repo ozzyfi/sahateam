@@ -3258,6 +3258,25 @@
         else openDrawer();
       });
       drawer.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeDrawer));
+      // Hash link handler: scroll-lock (body position:fixed) blocks browser's default hash scroll,
+      // so we close the drawer first then manually scroll to the target.
+      drawer.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const hash = link.getAttribute('href');
+          if (!hash || hash.length < 2) return;
+          e.preventDefault();
+          const target = document.querySelector(hash);
+          closeDrawer();
+          if (target) {
+            setTimeout(() => {
+              const navH = 68;
+              const y = target.getBoundingClientRect().top + window.scrollY - navH;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+              history.pushState(null, '', hash);
+            }, 80);
+          }
+        });
+      });
       drawer.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeDrawer(); } else trapFocus(drawer, e); });
       // Auto-close on resize to desktop
       let resizeT;
