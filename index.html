@@ -879,21 +879,34 @@
       flex-direction: column;
       gap: 12px;
     }
-    @media (min-width: 768px) { .flow-row { flex-direction: row; align-items: stretch; gap: 0; } }
+    @media (min-width: 768px) {
+      .flow-row {
+        display: grid;
+        grid-template-columns: 1fr 36px 1fr;
+        grid-template-rows: auto 36px auto;
+        gap: 16px;
+        align-items: stretch;
+      }
+    }
     .flow-node {
-      flex: 1 1 240px;
-      min-width: 240px;
       background: rgba(15, 31, 28, 0.5);
       border: 1px solid rgba(250, 248, 243, 0.10);
       border-radius: 16px;
-      padding: 18px 14px;
+      padding: 22px 16px;
       display: flex;
       flex-direction: column;
       gap: 6px;
       justify-content: space-between;
+      min-width: 0;
+    }
+    @media (min-width: 768px) {
+      .flow-node:nth-child(1) { grid-area: 1 / 1; }
+      .flow-node:nth-child(3) { grid-area: 1 / 3; }
+      .flow-node:nth-child(5) { grid-area: 3 / 3; }
+      .flow-node:nth-child(7) { grid-area: 3 / 1; }
     }
     .flow-node .ic {
-      width: 36px; height: 36px;
+      width: 40px; height: 40px;
       border-radius: 10px;
       background: rgba(37, 211, 102, 0.15);
       color: var(--accent);
@@ -901,28 +914,37 @@
       align-items: center;
       justify-content: center;
     }
-    .flow-node .nm { font-size: 12.5px; font-weight: 600; color: var(--bg); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .flow-node .ds { font-size: 12px; color: rgba(250, 248, 243, 0.55); line-height: 1.4; }
+    .flow-node .nm { font-size: 14px; font-weight: 600; color: var(--bg); line-height: 1.3; }
+    .flow-node .ds { font-size: 12.5px; color: rgba(250, 248, 243, 0.6); line-height: 1.45; }
 
     .flow-arrow {
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      padding: 8px 0;
-      gap: 4px;
       color: rgba(250, 248, 243, 0.4);
-      flex-shrink: 0;
+      padding: 4px 0;
     }
     @media (min-width: 768px) {
       .flow-arrow {
-        padding: 0 4px;
-        flex-direction: column;
-        align-self: center;
+        padding: 0;
       }
+      .flow-arrow:nth-child(2) { grid-area: 1 / 2; }
+      .flow-arrow:nth-child(4) { grid-area: 2 / 3; }
+      .flow-arrow:nth-child(6) { grid-area: 3 / 2; }
     }
-    .flow-arrow .lbl { font-size: 10px; font-weight: 500; color: rgba(250, 248, 243, 0.5); text-transform: uppercase; letter-spacing: 0.06em; }
-    .flow-arrow svg { color: var(--accent); }
+    .flow-arrow svg {
+      color: var(--accent);
+      width: 22px;
+      height: 22px;
+    }
+    @media (max-width: 767px) {
+      .flow-arrow svg { transform: rotate(90deg); }
+    }
+    @media (min-width: 768px) {
+      .flow-arrow:nth-child(2) svg { transform: rotate(0deg); }
+      .flow-arrow:nth-child(4) svg { transform: rotate(90deg); }
+      .flow-arrow:nth-child(6) svg { transform: rotate(180deg); }
+    }
 
     /* =====================================================
        HOW IT WORKS
