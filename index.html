@@ -3764,16 +3764,36 @@
       try { localStorage.setItem('saha.lang', lang); } catch (e) {}
     }
 
-    // Determine initial language: query param > localStorage > 'tr'
+    // Determine initial language:
+    //   1. URL query param ?lang=tr|en  (highest priority, explicit override)
+    //   2. localStorage('saha.lang')     (user's previous choice)
+    //   3. navigator.language / navigator.languages — TR if any starts with 'tr', else EN
+    //   4. Default fallback = 'tr' (current primary market)
     function getInitialLang() {
+      // 1. Query param
       try {
         const qp = new URLSearchParams(window.location.search).get('lang');
         if (qp === 'en' || qp === 'tr') return qp;
       } catch (e) {}
+      // 2. localStorage
       try {
         const stored = localStorage.getItem('saha.lang');
         if (stored === 'en' || stored === 'tr') return stored;
       } catch (e) {}
+      // 3. Browser language — if Turkish anywhere in language list, use TR; else EN
+      try {
+        const langs = (typeof navigator !== 'undefined' && navigator.languages && navigator.languages.length)
+          ? navigator.languages
+          : (typeof navigator !== 'undefined' && navigator.language)
+            ? [navigator.language]
+            : [];
+        for (const lang of langs) {
+          if (typeof lang === 'string' && lang.toLowerCase().indexOf('tr') === 0) return 'tr';
+        }
+        // Browser language exists but not TR → EN
+        if (langs.length > 0) return 'en';
+      } catch (e) {}
+      // 4. Default fallback (no browser language available)
       return 'tr';
     }
 
