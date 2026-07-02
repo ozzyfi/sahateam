@@ -3591,7 +3591,9 @@
         const el = document.querySelector(sel);
         if (el && dict[key]) el.setAttribute(attr, dict[key]);
       };
-      setMeta('title', 'meta.title', 'text');
+      // Title: textContent, not attribute
+      const titleEl = document.querySelector('title');
+      if (titleEl && dict['meta.title']) titleEl.textContent = dict['meta.title'];
       setMeta('meta[name="description"]', 'meta.description', 'content');
       setMeta('meta[name="keywords"]', 'meta.keywords', 'content');
       setMeta('meta[property="og:title"]', 'meta.ogTitle', 'content');
