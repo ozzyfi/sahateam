@@ -3560,30 +3560,71 @@
     const WHATSAPP_PHONE = '358415773392';
 
     function applyI18n(lang) {
-      const dict = I18N[lang] || I18N.tr;
+      const dict = I18N[lang] || {};
       const html = document.documentElement;
       html.setAttribute('lang', lang === 'en' ? 'en' : 'tr');
+
+      // First time: capture original (TR) content from HTML as fallback
+      if (!window._i18nInitialized) {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          if (el.getAttribute('data-i18n-original') === null) {
+            el.setAttribute('data-i18n-original', el.innerHTML);
+          }
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+          if (el.getAttribute('data-i18n-original-placeholder') === null) {
+            el.setAttribute('data-i18n-original-placeholder', el.getAttribute('placeholder') || '');
+          }
+        });
+        document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+          if (el.getAttribute('data-i18n-original-aria') === null) {
+            el.setAttribute('data-i18n-original-aria', el.getAttribute('aria-label') || '');
+          }
+        });
+        document.querySelectorAll('[data-i18n-title]').forEach(el => {
+          if (el.getAttribute('data-i18n-original-title') === null) {
+            el.setAttribute('data-i18n-original-title', el.getAttribute('title') || '');
+          }
+        });
+        window._i18nInitialized = true;
+      }
 
       // Update all data-i18n* elements
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (!dict[key]) return;
-        el.innerHTML = dict[key];
+        if (lang === 'en' && dict[key]) {
+          el.innerHTML = dict[key];
+        } else if (lang === 'tr') {
+          const orig = el.getAttribute('data-i18n-original');
+          if (orig !== null) el.innerHTML = orig;
+        }
       });
       document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.getAttribute('data-i18n-placeholder');
-        if (!dict[key]) return;
-        el.setAttribute('placeholder', dict[key]);
+        if (lang === 'en' && dict[key]) {
+          el.setAttribute('placeholder', dict[key]);
+        } else if (lang === 'tr') {
+          const orig = el.getAttribute('data-i18n-original-placeholder');
+          if (orig !== null) el.setAttribute('placeholder', orig);
+        }
       });
       document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
         const key = el.getAttribute('data-i18n-aria-label');
-        if (!dict[key]) return;
-        el.setAttribute('aria-label', dict[key]);
+        if (lang === 'en' && dict[key]) {
+          el.setAttribute('aria-label', dict[key]);
+        } else if (lang === 'tr') {
+          const orig = el.getAttribute('data-i18n-original-aria');
+          if (orig !== null) el.setAttribute('aria-label', orig);
+        }
       });
       document.querySelectorAll('[data-i18n-title]').forEach(el => {
         const key = el.getAttribute('data-i18n-title');
-        if (!dict[key]) return;
-        el.setAttribute('title', dict[key]);
+        if (lang === 'en' && dict[key]) {
+          el.setAttribute('title', dict[key]);
+        } else if (lang === 'tr') {
+          const orig = el.getAttribute('data-i18n-original-title');
+          if (orig !== null) el.setAttribute('title', orig);
+        }
       });
 
       // Update meta tags
@@ -3616,8 +3657,16 @@
       // Update select options text (data-i18n-opt on <option>)
       document.querySelectorAll('[data-i18n-opt]').forEach(el => {
         const key = el.getAttribute('data-i18n-opt');
-        if (!dict[key]) return;
-        el.textContent = dict[key];
+        // First time: capture original text
+        if (el.getAttribute('data-i18n-original-opt') === null) {
+          el.setAttribute('data-i18n-original-opt', el.textContent);
+        }
+        if (lang === 'en' && dict[key]) {
+          el.textContent = dict[key];
+        } else if (lang === 'tr') {
+          const orig = el.getAttribute('data-i18n-original-opt');
+          if (orig !== null) el.textContent = orig;
+        }
       });
 
       // Update submit button + form subject on lang change
