@@ -3659,11 +3659,41 @@
       // Update meta tags
       const setMeta = (sel, key, attr) => {
         const el = document.querySelector(sel);
-        if (el && dict[key]) el.setAttribute(attr, dict[key]);
+        if (!el) return;
+        if (lang === 'en' && dict[key]) {
+          el.setAttribute(attr, dict[key]);
+        } else if (lang === 'tr') {
+          // Restore original TR from data-original-* attr (set during first capture)
+          const origAttr = 'data-orig-' + attr;
+          const orig = el.getAttribute(origAttr);
+          if (orig !== null) el.setAttribute(attr, orig);
+        }
       };
-      // Title: textContent, not attribute
+      // First-time capture: original TR values for all meta tags
+      if (!window._metaOrigCaptured) {
+        document.querySelectorAll('meta').forEach(el => {
+          ['content', 'property'].forEach(attr => {
+            if (el.hasAttribute(attr)) {
+              el.setAttribute('data-orig-' + attr, el.getAttribute(attr));
+            }
+          });
+        });
+        const tEl = document.querySelector('title');
+        if (tEl && !tEl.getAttribute('data-orig-text')) {
+          tEl.setAttribute('data-orig-text', tEl.textContent);
+        }
+        window._metaOrigCaptured = true;
+      }
+      // Title: textContent (special handling)
       const titleEl = document.querySelector('title');
-      if (titleEl && dict['meta.title']) titleEl.textContent = dict['meta.title'];
+      if (titleEl) {
+        if (lang === 'en' && dict['meta.title']) {
+          titleEl.textContent = dict['meta.title'];
+        } else if (lang === 'tr') {
+          const orig = titleEl.getAttribute('data-orig-text');
+          if (orig !== null) titleEl.textContent = orig;
+        }
+      }
       setMeta('meta[name="description"]', 'meta.description', 'content');
       setMeta('meta[name="keywords"]', 'meta.keywords', 'content');
       setMeta('meta[property="og:title"]', 'meta.ogTitle', 'content');
